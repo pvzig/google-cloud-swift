@@ -1,0 +1,9 @@
+{
+  "indentation": {
+    "spaces": 4
+  },
+  "rules": {
+    "OrderedImports": true
+  },
+  "version": 1
+}

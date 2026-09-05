@@ -1,0 +1,73 @@
+# Pub/Sub Testbed
+
+This testbed exercises the Swift Pub/Sub implementation against a live Pub/Sub-compatible endpoint.
+
+## Default: Local Emulator
+
+Run:
+
+```sh
+./Scripts/run-pubsub-testbed.sh
+```
+
+The script starts the official Google Cloud Pub/Sub emulator, sets `PUBSUB_EMULATOR_HOST`, runs `swift run PubSubTestbed`, and stops the emulator on exit. It prefers a local `gcloud beta emulators pubsub start` process when Java is available, and falls back to the Google Cloud CLI Docker `:emulators` image when Docker is available.
+
+Requirements:
+
+- Google Cloud CLI, `gcloud components install pubsub-emulator`, and a Java runtime required by the emulator; or
+- Docker with access to `gcr.io/google.com/cloudsdktool/google-cloud-cli:emulators`.
+
+Optional environment:
+
+- `PUBSUB_TEST_PROJECT_ID`: Project ID string used inside the emulator.
+- `PUBSUB_TESTBED_HOST_PORT`: Emulator host and port. Defaults to `127.0.0.1:8085`.
+- `PUBSUB_TESTBED_DATA_DIR`: Emulator data directory.
+- `PUBSUB_TESTBED_LOG_FILE`: Emulator log path.
+- `PUBSUB_TESTBED_DOCKER_IMAGE`: Docker image used by the fallback path.
+- `PUBSUB_TESTBED_SUFFIX`: Resource-name suffix for deterministic debugging.
+
+## Existing Emulator
+
+Run:
+
+```sh
+PUBSUB_EMULATOR_HOST=127.0.0.1:8085 \
+PUBSUB_PROJECT_ID=google-cloud-swift-testbed \
+swift run PubSubTestbed
+```
+
+## Real Google Cloud
+
+Run only against an isolated project:
+
+```sh
+PUBSUB_TESTBED_ALLOW_REAL=1 \
+PUBSUB_TEST_PROJECT_ID=your-project-id \
+swift run PubSubTestbed
+```
+
+Optional exactly-once coverage:
+
+```sh
+PUBSUB_TESTBED_ALLOW_REAL=1 \
+PUBSUB_TESTBED_EXACTLY_ONCE=1 \
+PUBSUB_TEST_PROJECT_ID=your-project-id \
+swift run PubSubTestbed
+```
+
+Exactly-once is off by default because the local emulator is intentionally incomplete and the real service can incur cost.
+
+## Coverage
+
+- Topic creation and lookup.
+- Subscription creation and lookup.
+- Publisher batching, `flush()`, and publish futures.
+- `StreamingPull` receive through `MessageStream`.
+- Handler `ack()` forwarding through the lease manager.
+- Handler `nack()` and redelivery.
+- StreamingPull with non-default flow-control settings.
+- Optional real-service exactly-once confirmed ack.
+
+## Emulator Limitations
+
+The emulator is the right default for repeatable local validation, but it does not fully match production Pub/Sub. Keep production-only behavior, especially exactly-once delivery, behind explicit real-project runs.
