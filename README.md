@@ -8,12 +8,6 @@ The package provides:
 - **Auth** — Application Default Credentials (ADC), token caching, service-account JWTs, user credentials, metadata-server authentication, service-account impersonation, and a gRPC authorization interceptor.
 - **PubSubTestbed** — an executable integration testbed for the local emulator or an isolated Google Cloud project.
 
-## Requirements
-
-- Swift 6.3 or later.
-- macOS 15 or later, or Linux. See [SPEC.md](SPEC.md) for recorded platform validation.
-- For service calls, configured Google Cloud credentials or a running Pub/Sub emulator.
-
 ## Installation
 
 For a new executable, use this `Package.swift` and place your source in `Sources/Server/main.swift`:
@@ -40,18 +34,12 @@ let package = Package(
 )
 ```
 
-For an existing package, merge the dependency and product entries into your manifest. Use Swift tools 6.3 or later and a macOS deployment target of at least 15 when building on macOS.
-
-There are no tagged releases yet, so the example tracks `main`. For development against a local checkout, replace the package dependency with `.package(path: "../google-cloud-swift")`.
-
-Use `import PubSub` for messaging. The direct `Auth` product dependency is optional unless you configure credentials yourself.
-
 ## Authentication
 
-Pub/Sub clients use ADC by default. The current lookup order is:
+Pub/Sub clients use ADC by default. The lookup order is:
 
-1. The credential JSON file named by `GOOGLE_APPLICATION_CREDENTIALS`.
-2. `$HOME/.config/gcloud/application_default_credentials.json`.
+1. `GOOGLE_APPLICATION_CREDENTIALS`
+2. `$HOME/.config/gcloud/application_default_credentials.json`
 3. The metadata server, for workloads running on Google Cloud.
 
 For a credential file:
@@ -66,7 +54,7 @@ To inject credentials, construct an `Auth.Authorization` and pass it to a client
 
 ## Publish messages
 
-The following examples run inside an `async throws` function. Use full resource names, and create the topic and subscription before publishing.
+Use full resource names, and create the topic and subscription before publishing.
 
 ```swift
 import Foundation
@@ -80,7 +68,7 @@ let publisher = try await Publisher.builder("projects/my-project/topics/events")
 do {
     let future = publisher.publish(
         Message(
-            data: Data("Hello, Pub/Sub!".utf8),
+            string: "Hello, Pub/Sub",
             attributes: ["source": "swift"]
         )
     )
@@ -95,6 +83,16 @@ do {
 
 await publisher.shutdown()
 ```
+
+`Message(string:)` encodes its payload as UTF-8. Use `Message(data:)` for raw bytes or `try Message(json:)` for an `Encodable` JSON payload. All three accept `attributes` and `orderingKey`.
+
+```swift
+let encoder = JSONEncoder()
+encoder.dateEncodingStrategy = .iso8601
+let datedMessage = try Message(json: ["createdAt": Date()], encoder: encoder)
+```
+
+JSON encoding errors propagate to the caller. The supplied encoder controls the payload's encoding strategies.
 
 `publish(_:)` synchronously queues a message and returns a `PublishFuture`. Await `value()` to obtain the server-assigned message ID or a `PublishError`. `flush()` bypasses batching delays and waits for messages already queued or in flight to reach a terminal result; inspect each future to detect failures.
 

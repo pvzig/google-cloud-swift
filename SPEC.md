@@ -21,6 +21,7 @@ Use actors, synchronized ingress, tasks, task groups, and async sequences for co
 
 ## Publisher contracts
 
+- `Message(string:attributes:orderingKey:)` stores the string's UTF-8 bytes, including empty strings and embedded nulls. `Message(json:encoder:attributes:orderingKey:)` encodes any `Encodable` payload with a default or caller-supplied `JSONEncoder` and propagates encoding errors. Both delegate to the existing data initializer, preserve attributes and ordering keys, and default metadata to empty values. JSON encoding applies to the payload, not the protobuf message envelope.
 - `publish(_:)` admits messages synchronously before returning a `PublishFuture`. Admission and shutdown share one synchronized state; later publishes fail with `.shutdown`.
 - `flush()` observes earlier admissions, bypasses delays across ordering keys, and waits for buffered, in-flight, and locally rejected futures to become terminal. Completion handoffs remain tracked across actor suspension. Flush retains completion boxes rather than duplicate payloads.
 - Unordered batches run concurrently; ordered keys allow one in-flight batch each. Every batch respects configured thresholds and the 1,000-message/10 MB request caps. A single message may exceed a configured threshold but never the wire-size cap. Exact protobuf sizing includes framing without allocating another payload buffer.

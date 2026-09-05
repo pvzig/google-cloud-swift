@@ -20,6 +20,32 @@ extension Google_Pubsub_V1_PubsubMessage {
         self.orderingKey = orderingKey
     }
 
+    /// Creates a message with the string's UTF-8 bytes as its payload.
+    public init(
+        string: String,
+        attributes: [String: String] = [:],
+        orderingKey: String = ""
+    ) {
+        self.init(data: Data(string.utf8), attributes: attributes, orderingKey: orderingKey)
+    }
+
+    /// Creates a message by encoding the value as a JSON payload.
+    ///
+    /// The encoder's configured strategies are used without modification.
+    /// Encoding errors propagate to the caller.
+    public init(
+        json value: some Encodable,
+        encoder: JSONEncoder = JSONEncoder(),
+        attributes: [String: String] = [:],
+        orderingKey: String = ""
+    ) throws {
+        self.init(
+            data: try encoder.encode(value),
+            attributes: attributes,
+            orderingKey: orderingKey
+        )
+    }
+
     public var estimatedByteCount: Int {
         data.count
             + attributes.reduce(0) { partialResult, element in
