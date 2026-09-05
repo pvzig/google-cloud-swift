@@ -16,29 +16,35 @@ The package provides:
 
 ## Installation
 
-Add the repository to your application's `Package.swift`:
+For a new executable, use this `Package.swift` and place your source in `Sources/Server/main.swift`:
 
 ```swift
-dependencies: [
-    .package(url: "https://github.com/pvzig/google-cloud-swift.git", branch: "main")
-]
-```
+// swift-tools-version: 6.3
+import PackageDescription
 
-For development against a local checkout, use `.package(path: "../google-cloud-swift")` instead.
-
-Then add the products your target uses:
-
-```swift
-.executableTarget(
+let package = Package(
     name: "Server",
+    platforms: [.macOS(.v15)],
     dependencies: [
-        .product(name: "PubSub", package: "google-cloud-swift"),
-        .product(name: "Auth", package: "google-cloud-swift"),
+        .package(url: "https://github.com/pvzig/google-cloud-swift.git", branch: "main")
+    ],
+    targets: [
+        .executableTarget(
+            name: "Server",
+            dependencies: [
+                .product(name: "PubSub", package: "google-cloud-swift"),
+                .product(name: "Auth", package: "google-cloud-swift"),
+            ]
+        )
     ]
 )
 ```
 
-Use `import PubSub` for messaging. Add `Auth` to your target when you need to configure credentials directly.
+For an existing package, merge the dependency and product entries into your manifest. Use Swift tools 6.3 or later and a macOS deployment target of at least 15 when building on macOS.
+
+There are no tagged releases yet, so the example tracks `main`. For development against a local checkout, replace the package dependency with `.package(path: "../google-cloud-swift")`.
+
+Use `import PubSub` for messaging. The direct `Auth` product dependency is optional unless you configure credentials yourself.
 
 ## Authentication
 
