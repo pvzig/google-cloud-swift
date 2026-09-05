@@ -18,9 +18,6 @@ let package = Package(
         .package(url: "https://github.com/grpc/grpc-swift-nio-transport.git", from: "2.9.0"),
         .package(url: "https://github.com/apple/swift-log.git", from: "1.15.0"),
         .package(url: "https://github.com/vapor/jwt-kit.git", from: "5.6.0"),
-        // Token and metadata-server calls run on NIO rather than URLSession:
-        // corelibs-foundation's URLSession is the weakest link on the platform this
-        // client mostly targets, and NIO is already in the resolved graph.
         .package(url: "https://github.com/swift-server/async-http-client.git", from: "1.36.0"),
     ],
     targets: [
