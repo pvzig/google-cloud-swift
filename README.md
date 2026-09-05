@@ -2,6 +2,8 @@
 
 Swift clients for Google Cloud Pub/Sub and authentication, using `async`/`await`, `AsyncSequence`, and gRPC.
 
+This library is intended as a Swift implementation of [Google Cloud Rust](https://github.com/googleapis/google-cloud-rust).
+
 The package provides:
 
 - **PubSub** — batching publishers, ordered publishing, streaming subscribers, automatic lease management, confirmed exactly-once acknowledgements, and topic, subscription, and schema administration.

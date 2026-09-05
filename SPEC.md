@@ -2,7 +2,7 @@
 
 ## Scope and structure
 
-Implement Google Cloud Pub/Sub and authentication in Swift, modeled on `googleapis/google-cloud-rust/src/{pubsub,auth}`. The package targets Swift 6.3+, macOS 15+, and Linux. Public API examples and installation live in [README.md](README.md); dependency requirements and resolved versions live in [Package.swift](Package.swift) and [Package.resolved](Package.resolved).
+Implement Google Cloud Pub/Sub and authentication in Swift, modeled on the `src/{pubsub,auth}` implementations in [Google Cloud Rust](https://github.com/googleapis/google-cloud-rust), with attribution in the README introduction. The package targets Swift 6.3+, macOS 15+, and Linux. Public API examples and installation live in [README.md](README.md); dependency requirements and resolved versions live in [Package.swift](Package.swift) and [Package.resolved](Package.resolved).
 
 The public repository is `https://github.com/pvzig/google-cloud-swift`. Installation tracks `main` until a tagged release exists.
 
