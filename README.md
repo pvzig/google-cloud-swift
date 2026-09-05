@@ -16,13 +16,15 @@ The package provides:
 
 ## Installation
 
-Add this checkout to your application's `Package.swift`, adjusting the relative path as needed:
+Add the repository to your application's `Package.swift`:
 
 ```swift
 dependencies: [
-    .package(path: "../google-cloud-swift")
+    .package(url: "https://github.com/pvzig/google-cloud-swift.git", branch: "main")
 ]
 ```
+
+For development against a local checkout, use `.package(path: "../google-cloud-swift")` instead.
 
 Then add the products your target uses:
 

@@ -255,9 +255,15 @@ Review-fix validation (2026-09-04):
 
 README documentation (2026-09-04):
 
-- Added a root README covering the implemented public API and current limitations, with local SwiftPM installation because this checkout has no configured Git remote.
+- Added a root README covering the implemented public API and current limitations, initially using local SwiftPM installation before the GitHub repository was created.
 - Examples document explicit client cleanup, publisher future errors, handler consumption, exactly-once confirmation, and per-phase subscriber shutdown grace periods; emulator details link to the existing testbed runbook.
 - Validated the installation snippets with `swift package dump-package` and typechecked the publishing, subscribing, and acknowledgement examples against the current built modules. Checked relative links, code fences, and `git diff --check` (including staged changes). Examples were not executed against a service; Swift formatting and the test suite were not rerun for this Markdown-only update.
+
+Repository publication (2026-09-04):
+
+- Public repository: `https://github.com/pvzig/google-cloud-swift`; the local `origin` remote uses this repository.
+- Publish the existing project history on `main` and configure upstream tracking. The README now uses a GitHub dependency on `main` and retains the local-checkout alternative; no release tag is introduced.
+- Validation checks the SwiftPM installation manifest, patch whitespace, public visibility, and equality of local and remote `main` after pushing. This publication changes documentation only; the 109-test validation above remains the latest source validation.
 
 Current emulator-backed testbed coverage:
 
