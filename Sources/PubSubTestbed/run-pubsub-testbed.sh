@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 PROJECT_ID="${PUBSUB_TEST_PROJECT_ID:-${PUBSUB_PROJECT_ID:-google-cloud-swift-testbed}}"
 HOST_PORT="${PUBSUB_TESTBED_HOST_PORT:-127.0.0.1:8085}"
 HOST="${HOST_PORT%:*}"

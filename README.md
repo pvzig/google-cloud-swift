@@ -180,10 +180,10 @@ swift test --parallel
 Run the emulator integration testbed:
 
 ```sh
-./Scripts/run-pubsub-testbed.sh
+./Sources/PubSubTestbed/run-pubsub-testbed.sh
 ```
 
-The wrapper starts the emulator using Google Cloud CLI plus Java, or Docker, runs the testbed, and stops the emulator on exit. See the [testbed guide](Testbeds/PubSub/README.md) for prerequisites, environment variables, and real-service validation.
+The wrapper starts the emulator using Google Cloud CLI plus Java, or Docker, runs the testbed, and stops the emulator on exit. See the [testbed guide](Sources/PubSubTestbed/README) for prerequisites, environment variables, and real-service validation.
 
 To point your own application at an existing emulator:
 

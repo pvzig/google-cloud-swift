@@ -4,13 +4,15 @@ This testbed exercises the Swift Pub/Sub implementation against a live Pub/Sub-c
 
 ## Default: Local Emulator
 
-Run:
+Run from the repository root:
 
 ```sh
-./Scripts/run-pubsub-testbed.sh
+./Sources/PubSubTestbed/run-pubsub-testbed.sh
 ```
 
 The script starts the official Google Cloud Pub/Sub emulator, sets `PUBSUB_EMULATOR_HOST`, runs `swift run PubSubTestbed`, and stops the emulator on exit. It prefers a local `gcloud beta emulators pubsub start` process when Java is available, and falls back to the Google Cloud CLI Docker `:emulators` image when Docker is available.
+
+The script resolves the package root from its own location, so it can also be invoked by path from another working directory.
 
 Requirements:
 

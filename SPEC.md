@@ -14,7 +14,7 @@ The public repository is `https://github.com/pvzig/google-cloud-swift`. Installa
 | `Sources/PubSub/Admin` | `TopicAdmin`, `SubscriptionAdmin`, and `SchemaService`, sharing a typed RPC executor. |
 | `Sources/PubSub/Publisher` | `Publisher`, `BasePublisher`, batching by ordering key, and publish futures. |
 | `Sources/PubSub/Subscriber` | `Subscriber`, `Subscribe`, `MessageStream`, handlers, shutdown tokens, and lease management. |
-| `Sources/PubSubTestbed` | Integration scenarios; [runbook](Testbeds/PubSub/README.md) and [emulator wrapper](Scripts/run-pubsub-testbed.sh). |
+| `Sources/PubSubTestbed` | Integration scenarios; [runbook](Sources/PubSubTestbed/README) and [emulator wrapper](Sources/PubSubTestbed/run-pubsub-testbed.sh). The runbook and script are excluded from SwiftPM target inputs. |
 | `Tests/AuthTests`, `Tests/PubSubTests` | Swift Testing coverage for credentials, transport contracts, publishing, and subscriber lifecycle. |
 
 Use actors, synchronized ingress, tasks, task groups, and async sequences for concurrency. Auth is an in-repo product; SwiftNIO is transitive through the gRPC/JWT dependency graph. `swift-log` provides refresh, retry, reconnect, and lease diagnostics.
@@ -101,14 +101,4 @@ Remaining gaps are external-account/STS exchange, `protocol_version` and server 
 
 For Swift changes, format touched files, run `swift build` and `swift test --parallel`, and finish with `git diff --check`. Add focused regressions for changed contracts above. For documentation changes, validate examples, links, and whitespace; update this specification without rerunning the suite solely for Markdown edits.
 
-Run [Scripts/run-pubsub-testbed.sh](Scripts/run-pubsub-testbed.sh) for emulator integration. The wrapper prefers gcloud plus Java, falls back to Docker, refuses an occupied HTTP port, verifies launcher liveness, and stops the complete process tree on exit. Scenarios cover resource creation/lookup, batching/futures/flush, StreamingPull flow control, ack, nack/redelivery, and shutdown. Real-service exactly-once validation is explicit and uses an isolated project; commands are in the [testbed runbook](Testbeds/PubSub/README.md).
-
-Recorded evidence:
-
-| Scope | Result |
-| --- | --- |
-| macOS / Swift 6.4, 2026-09-04 | 109 tests passed: 86 PubSub and 23 Auth. All six unrelated-ErrorInfo cases and six malformed-ADC cases failed before their fixes, then passed. Formatting and diff checks passed; no live-provider run. |
-| Linux / `swift:6.3-noble`, 2026-07-25 | Build and 78 tests passed using a read-only source mount. This predates later fixes. |
-| Earlier protocol and lifecycle checks | All 32 routing keys checked against Pub/Sub/Schema proto paths; shutdown, retry-budget, cancellation, flush, and lease regressions mutation-checked. Emulator scenarios above were exercised; real-service exactly-once remains optional. |
-| README examples, 2026-09-04 | Publish, subscribe, and acknowledgement snippets typechecked; links and fences checked. Examples were not executed against a service. |
-| Public SwiftPM installation, 2026-09-04 | The complete README manifest resolved `main` at `61086c8` and built a fresh consumer importing Auth and PubSub with Swift 6.4. Documentation links, fences, and whitespace checked; source tests were not rerun for these Markdown edits. |
+Run [Sources/PubSubTestbed/run-pubsub-testbed.sh](Sources/PubSubTestbed/run-pubsub-testbed.sh) for emulator integration. The wrapper resolves the package root two directories above itself, independent of the caller's working directory. It prefers gcloud plus Java, falls back to Docker, refuses an occupied HTTP port, verifies launcher liveness, and stops the complete process tree on exit. Scenarios cover resource creation/lookup, batching/futures/flush, StreamingPull flow control, ack, nack/redelivery, and shutdown. Real-service exactly-once validation is explicit and uses an isolated project; commands are in the [testbed runbook](Sources/PubSubTestbed/README).

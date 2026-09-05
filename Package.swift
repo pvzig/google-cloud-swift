@@ -60,7 +60,8 @@ let package = Package(
         ),
         .executableTarget(
             name: "PubSubTestbed",
-            dependencies: ["PubSub"]
+            dependencies: ["PubSub"],
+            exclude: ["README", "run-pubsub-testbed.sh"]
         ),
     ]
 )
